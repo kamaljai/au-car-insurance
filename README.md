@@ -4,6 +4,18 @@
 
 Australian comprehensive car insurance adviser skill for Claude Code and Claude.ai.
 
+## Installation
+
+```bash
+npx skills add au-car-insurance
+```
+
+Or add it manually by cloning this repo into your skills directory:
+
+```bash
+git clone https://github.com/kamaljai/au-car-insurance ~/.claude/skills/au-car-insurance
+```
+
 ## What it does
 
 Guides users through a structured interview to gather their driver and vehicle details, validates their parking address, searches for current indicative quotes from five major Australian insurers, and presents a side-by-side comparison with a personalised recommendation.
