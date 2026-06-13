@@ -18,9 +18,9 @@ git clone https://github.com/kamaljai/au-car-insurance ~/.claude/skills/au-car-i
 
 ## What it does
 
-Guides users through a structured interview to gather their driver and vehicle details, validates their parking address, searches for current indicative quotes from five major Australian insurers, and presents a side-by-side comparison with a personalised recommendation.
+Guides users through a short, privacy-minimal interview, builds a state-aware insurer shortlist, searches for **current** pricing and PDS coverage (live data first, always), and presents a side-by-side comparison with honest provenance labels — as general information, not personal advice.
 
-**Insurers covered:** Allianz, NRMA, AAMI, Budget Direct, QBE
+**Insurers covered:** Allianz, AAMI, Budget Direct, QBE, NRMA, plus the user's state motoring club (RACV in VIC, RACQ in QLD, RAA in SA, RAC in WA). Digital-only brands (Bingle, ROLLiN', etc.) are offered when lowest price is the top priority.
 
 ## Trigger phrases
 
@@ -33,23 +33,24 @@ Use this skill when a user:
 
 ## How it works
 
-The skill runs in six phases:
+The skill runs in six phases, governed by five non-negotiable rules (live data first, honest provenance, minimal PII, general information only, no hardcoded winners):
 
 | Phase | Description |
 |-------|-------------|
-| 1 | **Information gathering** — structured interview across 7 sections (driver, vehicle, parking address, licence history, other drivers, insurance history, coverage preferences) |
-| 2 | **Address validation** — verifies the overnight parking address via web search before proceeding |
-| 3 | **Pricing search** — searches comparethemarket.com.au, finder.com.au, and insurer sites for current indicative quotes and promotions |
-| 4 | **Coverage comparison** — side-by-side PDS feature table across all five insurers, highlighting user-requested features with ⭐ |
-| 5 | **Pricing summary** — indicative annual premium ranges populated from search results (or reference ranges if no live data found) |
-| 6 | **Recommendation** — personalised pick based on the user's stated priorities (budget, claims service, repairer choice, new car, etc.) |
+| 1 | **Interview** — grouped sections covering driver, vehicle, licence history, insurance history, and priorities. Privacy-minimal: asks year of birth + suburb/postcode only — never full name, exact DOB, gender, rego, or street address |
+| 2 | **Location check** — validates the suburb + postcode + state combination only (street addresses are never sent to a search engine) |
+| 3 | **State-aware shortlist** — 4 national insurers plus the relevant state motoring club(s); digital-only brands offered to price-first users |
+| 4 | **Live data gathering** — mandatory web searches for current pricing, PDS limits, and promotions before any table is shown; every figure carries its source date and quoted profile |
+| 5 | **Comparison output** — feature table and pricing summary with provenance headers; if no live data is found, says so plainly rather than substituting stale reference ranges |
+| 6 | **Decision support** — maps the user's priorities to what the live data actually showed, including a dedicated renewal/loyalty-tax path for existing policyholders |
 
 ## Environment support
 
-| Environment | Pricing method | Address validation |
-|-------------|---------------|-------------------|
-| Claude Code (with Playwright) | `browser_navigate` + `browser_snapshot` on comparison sites | `WebSearch` |
-| Claude.ai / no browser | `WebSearch` for review/comparison articles | `WebSearch` |
+| Environment | Interview | Pricing method |
+|-------------|-----------|---------------|
+| Claude Code | `AskUserQuestion` for option-style questions; Playwright (if available) can open quote pages | `WebSearch`/`WebFetch` |
+| Claude.ai / no browser | Grouped conversational questions | Web search for review/comparison articles |
+| No web tools at all | Interview still runs | No dollar estimates given — clearly-labelled historical feature table + direct quote links only |
 
 ## Limitations
 
@@ -64,3 +65,4 @@ The skill runs in six phases:
 - [NRMA](https://www.nrma.com.au/policy-booklets)
 - [Budget Direct](https://www.budgetdirect.com.au/car-insurance/policy-documents.html)
 - [QBE](https://www.qbe.com/au/car-insurance/car-insurance-policy-documents)
+- [RACV](https://www.racv.com.au) · [RACQ](https://www.racq.com.au) · [RAA](https://www.raa.com.au) · [RAC](https://rac.com.au)
